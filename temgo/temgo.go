@@ -1,19 +1,29 @@
 package temgo
 
 import (
-	"errors"
 	"regexp"
+	"strings"
 )
 
 type EnvVars map[string]string
 
-var templatePattern = regexp.MustCompile("({{\\s[A-Z]+\\s}})")
+var templatePattern = regexp.MustCompile("{{\\s(\\D+)\\s}}")
 
 func ContainsVariable(str []byte) bool {
 	return templatePattern.Match(str)
 }
 
+func replace (e *EnvVars, bytes []byte) []byte {
+	list := templatePattern.FindAllStringSubmatch(string(bytes), -1)
+	for _, match := range list {
+		bytes = []byte(strings.Replace(string(bytes), match[0], (*e)[match[1]], -1))
+	}
+	return bytes
+}
+
 func (e *EnvVars) ReplaceVariables(str []byte) ([]byte, error) {
-	//templatePattern.ReplaceAllFunc()
-	return nil, errors.New("not implemented")
+	result := templatePattern.ReplaceAllFunc(str, func(b []byte) []byte {
+		return replace(e, b)
+	})
+	return result, nil
 }
