@@ -13,7 +13,7 @@ func ContainsVariable(str []byte) bool {
 	return templatePattern.Match(str)
 }
 
-func replace (e *EnvVars, bytes []byte) []byte {
+func replace(e *EnvVars, bytes []byte) []byte {
 	list := templatePattern.FindAllStringSubmatch(string(bytes), -1)
 	for _, match := range list {
 		bytes = []byte(strings.Replace(string(bytes), match[0], (*e)[match[1]], -1))
@@ -21,9 +21,9 @@ func replace (e *EnvVars, bytes []byte) []byte {
 	return bytes
 }
 
-func (e *EnvVars) ReplaceVariables(str []byte) ([]byte, error) {
+func (e *EnvVars) ReplaceVariables(str []byte) []byte {
 	result := templatePattern.ReplaceAllFunc(str, func(b []byte) []byte {
 		return replace(e, b)
 	})
-	return result, nil
+	return result
 }

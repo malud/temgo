@@ -41,8 +41,8 @@ func TestContainsVariable(t *testing.T) {
 
 func TestEnvVars_ReplaceVariables(t *testing.T) {
 	for _, test := range replaceTests {
-		bytes, err := replaceVars.ReplaceVariables([]byte(test.in))
-		if string(bytes) != test.out || err != nil {
+		bytes := replaceVars.ReplaceVariables([]byte(test.in))
+		if string(bytes) != test.out {
 			t.Errorf("Failed for case: '%v'. Expected: %v Got: %v", test.in, test.out, string(bytes))
 		}
 	}

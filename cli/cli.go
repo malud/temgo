@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/malud/temgo/temgo"
 	"io/ioutil"
 	"os"
@@ -20,12 +21,20 @@ func init() {
 }
 
 func main() {
+	var writeErr error
 	input := os.Stdin
-	bytes, _ := ioutil.ReadAll(input)
-	str := string(bytes)
-	if temgo.ContainsVariable(bytes) {
-		//str, err := temgo.ReplaceVariables(bytes)
+	bytes, err := ioutil.ReadAll(input)
+	if err != nil {
+		_, writeErr = os.Stderr.WriteString(fmt.Sprintf("Could not read: %v", err))
 	}
-	strings.Replace(str, "{{ TERM }}", envVars["TERM"], -1)
-	//t.Execute(os.Stdout, data)
+	if temgo.ContainsVariable(bytes) {
+		str := envVars.ReplaceVariables(bytes)
+		_, err = os.Stdout.Write(str)
+		if err != nil {
+			_, writeErr = os.Stderr.WriteString(fmt.Sprintf("Could not write: %v", err))
+		}
+	}
+	if writeErr != nil {
+		panic(writeErr)
+	}
 }
