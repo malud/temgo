@@ -7,7 +7,7 @@ import (
 
 type EnvVars map[string]string
 
-var templatePattern = regexp.MustCompile("{{\\s(\\D+)\\s}}")
+var templatePattern = regexp.MustCompile("{{\\s([A-Z_]*?)\\s}}")
 
 func ContainsVariable(str []byte) bool {
 	return templatePattern.Match(str)
