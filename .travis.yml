@@ -1,15 +1,19 @@
 language: go
+env:
+  - GIMME_OS=linux GIMME_ARCH=amd64
+  - GIMME_OS=darwin GIMME_ARCH=amd64
+  - GIMME_OS=windows GIMME_ARCH=amd64
 sudo: required
 go:
-- 1.5.4
-- 1.6.3
-- tip
+  - 1.5.4
+  - 1.6.3
+  - tip
 install:
-- go get -d -v -t ./...
+  - go get -d -v -t ./...
 script:
-- export GOMAXPROCS=$(nproc)
-- go test ./...
-- go build -o tg ./cli/cli.go
+  - export GOMAXPROCS=$(nproc)
+  - go test ./...
+  - go build -o tg ./cli/cli.go
 deploy:
   provider: releases
   api_key:
@@ -17,4 +21,5 @@ deploy:
   file: tg
   skip_cleanup: true
   on:
+    tags: true
     repo: malud/temgo
