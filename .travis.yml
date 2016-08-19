@@ -22,7 +22,6 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    repo: malud/temgo
 matrix:
   exclude:
   - go: 1.5.4
