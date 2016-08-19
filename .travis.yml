@@ -2,7 +2,8 @@ language: go
 sudo: required
 go:
 - 1.5.4
-- 1.6.2
+- 1.6.3
+- tip
 install:
 - go get -d -v -t ./...
 script:
@@ -14,5 +15,6 @@ deploy:
   api_key:
     secure: lS4Qrv2X+BRhUBUTgFPI1EfzvJDOMFDhHlNhCa1CNT4faA8HDVcLj79HUz6NenD6voT+FgV2UgmPRD/Yx+UkoTkbKAsZGf3j/XlRK3zeb8zPf7ZPulgMGKPVOeoe9S7XLtLL+/Yhu9v3BMpM+qIgto6Pqa1CJgtfh27yGZTwxLQ11rblQ2RCHSxxckZJ+/e7G7J1rR8kSReXULw2QkH9F1YW4Yp725d6v40cM9ReyuGhbBMrwZtPoTQfmasN82JMmWURLZrhvGbPGUQ0msO0xwXae6wQQ6kbn2q5j5PJzrZ8ChgyOMFYEIOFd9U8BAqaLZdbXuqkpw1vEVl59XGO6tZ/d9pQMKSO7Eo4tf+ZbR6/AlQrlWX0zJ0at62vyqLPFgB5ymArOf3xrrTmPor4KKC4X08ibGlJ0Y1HVus2lXxmfUDzdaEdWN6X8AjpHXkp8YA+PWIGi0fNCaStV7rMCeKvztX139SLkBo8aPfXb6qJa91b4u3Cud5j3JpbGEjyHxpjnTvzsdXl5dycz07Pg+qjTukufC0yUVAqYlDgdo2z+F1QSUzPyZIw30xisFfIPnguD9i//9Gw+ENrFbEaOqKqyJKOzeKk9Fxg00/mpvaf2Kfy2sFFpvO8S4d4c7lJ6CyJuf0NJ8nC4ZImpvCYyLsHNOThpObZpdDui/D+XbQ=
   file: tg
+  skip_cleanup: true
   on:
     repo: malud/temgo
