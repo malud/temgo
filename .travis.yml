@@ -5,14 +5,14 @@ env:
   - GIMME_OS=windows GIMME_ARCH=amd64
 sudo: required
 go:
-  - 1.5.4
   - 1.6.3
+  - 1.7
   - tip
 install:
   - go get -d -v -t ./...
 script:
   - export GOMAXPROCS=$(nproc)
-  - go test ./...
+#  - go test ./... -timeout=30s -parallel=4
   - go build -o tg ./cli/cli.go
 deploy:
   provider: releases
@@ -23,5 +23,8 @@ deploy:
   on:
     tags: true
 matrix:
+  fast_finish: true
+  allow_failures:
+  - go: tip
   exclude:
-  - go: 1.5.4
+  - go: 1.6.3
