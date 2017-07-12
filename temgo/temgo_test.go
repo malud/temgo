@@ -12,12 +12,14 @@ var containsTests = []struct {
 	{"This text contains a {{ VARIABLE }}.", true},
 	{"This text contains nothing.", false},
 	{"This text contains multiple {{ VAR }}{{ S }}.", true},
+	{"This text contains a variable with number {{ AUTH0_DOMAIN }}.", true},
 }
 
 var replaceVars = &temgo.EnvVars{
-	"VAR_A":      "/etc/ptc",
-	"VARIABLE_C": "color:256",
-	"S":          "short",
+	"VAR_A":        "/etc/ptc",
+	"VARIABLE_C":   "color:256",
+	"S":            "short",
+	"AUTH0_DOMAIN": "samples.auth0.com",
 }
 
 var replaceTests = []struct {
@@ -28,6 +30,7 @@ var replaceTests = []struct {
 	{"Some text with a {{ VARIABLE_C }} variable!", "Some text with a color:256 variable!"},
 	{"This is a {{ S }} text.", "This is a short text."},
 	{"This is a {{ S }} text with a {{ FAILVAR}} and some vars [\"{{ VAR_A }}\",'{{ VARIABLE_C }}'].", "This is a short text with a {{ FAILVAR}} and some vars [\"/etc/ptc\",'color:256']."},
+	{"This text contains a variable with number: '{{ AUTH0_DOMAIN }}'.", "This text contains a variable with number: 'samples.auth0.com'."},
 }
 
 func TestContainsVariable(t *testing.T) {

@@ -7,12 +7,13 @@ sudo: required
 go:
   - 1.6.3
   - 1.7
+  - 1.8.3
   - tip
 install:
   - go get -d -v -t ./...
 script:
   - export GOMAXPROCS=$(nproc)
-#  - go test ./... -timeout=30s -parallel=4
+  - go test -v -timeout=30s ./...
   - go build -o tg ./cli/cli.go
 deploy:
   provider: releases
