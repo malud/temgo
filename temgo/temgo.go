@@ -7,7 +7,8 @@ import (
 
 type EnvVars map[string]string
 
-var templatePattern = regexp.MustCompile("{{\\s([A-Z_0-9]*?)\\s}}")
+// following the posix standards
+var templatePattern = regexp.MustCompile(`\{{2} ([a-zA-Z_]+[a-zA-Z_0-9]*) }{2}`)
 
 func ContainsVariable(str []byte) bool {
 	return templatePattern.Match(str)
