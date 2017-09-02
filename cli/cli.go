@@ -1,40 +1,67 @@
 package main
 
 import (
-	"fmt"
-	"github.com/malud/temgo/temgo"
+	"bufio"
+	"flag"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/malud/temgo/temgo"
 )
 
 var envVars = make(temgo.EnvVars)
+var inlineFlag = flag.String("i", "", "-i filename")
 
-// Initialize and filter all non upper case variables.
 func init() {
 	for _, e := range os.Environ() {
 		string := strings.Split(e, "=")
-		if strings.Compare(string[0], strings.ToUpper(string[0])) == 0 {
-			envVars[string[0]] = string[1]
-		}
+		envVars[string[0]] = string[1]
+	}
+
+	if !flag.Parsed() {
+		flag.Parse()
 	}
 }
 
 func main() {
-	var writeErr error
-	input := os.Stdin
-	bytes, err := ioutil.ReadAll(input)
-	if err != nil {
-		_, writeErr = os.Stderr.WriteString(fmt.Sprintf("Could not read: %v", err))
+	var rw *bufio.ReadWriter
+	var file *os.File
+	if *inlineFlag != "" {
+		var err error
+		file, err = os.OpenFile(*inlineFlag, os.O_RDWR, 644)
+		must(err)
+		defer file.Close()
+		rw = bufio.NewReadWriter(bufio.NewReader(file), bufio.NewWriter(file))
+	} else {
+		rw = bufio.NewReadWriter(bufio.NewReader(os.Stdin), bufio.NewWriter(os.Stdout))
 	}
+
+	bytes, err := ioutil.ReadAll(rw)
+	must(err)
+
 	if temgo.ContainsVariable(bytes) {
 		str := envVars.ReplaceVariables(bytes)
-		_, err = os.Stdout.Write(str)
-		if err != nil {
-			_, writeErr = os.Stderr.WriteString(fmt.Sprintf("Could not write: %v", err))
+		if file != nil {
+			truncate(file)
 		}
+		_, err := rw.Write(str)
+		must(err)
+		must(rw.Flush())
 	}
-	if writeErr != nil {
-		panic(writeErr)
+}
+
+// fatal
+func must(err error) {
+	if err != nil {
+		println("Err:", err.Error())
+		os.Exit(1)
 	}
+}
+
+func truncate(file *os.File) {
+	err := file.Truncate(0)
+	must(err)
+	_, err = file.Seek(0, 0)
+	must(err)
 }

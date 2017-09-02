@@ -6,17 +6,24 @@ Environment variable based template engine like Jinja2 for your container config
 
 ## Usage
 
-Define variables with the format `{{ VAR_IABLE }}` and set them in your environment before **tg** execution.
+Define variables with the format `{{ VAR_IABLE }}` inside your template files and set them in your environment before **tg** execution.
 
-Currently with stdin/stdout support.
- ```
+Currently with stdin/stdout and inline support.
+ 
+ ```bash
+# pipe
 TESTVAR=foo cat /opt/templates/file1.ext | tg > /dest/config/file1.ext
+# or inline
+TESTVAR=foo tg -i /dest/config/file1.ext
  ```
+ 
+However, using the inline option on your templates will overwrite them.
+It is recommended to use this option on resettable files.
 
 ### TODO
 * flags for file in/out
 * prefix flag for env var e.g. SERVICE_XXX
 
-### Licence
+### License
 
 MIT
