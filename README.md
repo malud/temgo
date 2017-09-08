@@ -20,6 +20,9 @@ TESTVAR=foo tg -i /dest/config/file1.ext
 However, using the inline option on your templates will overwrite them.
 It is recommended to use this option on resettable files.
 
+Placeholders which have no corresponding environment variable gets not replaced.
+`echo 'foo {{ NOT_SET }} bar' | ./tg` results in `foo {{ NOT_SET }} bar`
+
 ### TODO
 * flags for file in/out
 * prefix flag for env var e.g. SERVICE_XXX

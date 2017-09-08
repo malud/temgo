@@ -37,17 +37,26 @@ func main() {
 		rw = bufio.NewReadWriter(bufio.NewReader(os.Stdin), bufio.NewWriter(os.Stdout))
 	}
 
+	replace(rw, file)
+}
+
+func replace(rw *bufio.ReadWriter, file *os.File) {
 	bytes, err := ioutil.ReadAll(rw)
 	must(err)
+	write := func(b []byte) {
+		_, err := rw.Write(b)
+		must(err)
+		must(rw.Flush())
+	}
 
 	if temgo.ContainsVariable(bytes) {
 		str := envVars.ReplaceVariables(bytes)
 		if file != nil {
 			truncate(file)
 		}
-		_, err := rw.Write(str)
-		must(err)
-		must(rw.Flush())
+		write(str)
+	} else if file == nil {
+		write(bytes)
 	}
 }
 

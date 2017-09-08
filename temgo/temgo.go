@@ -17,7 +17,11 @@ func ContainsVariable(str []byte) bool {
 func replace(e *EnvVars, bytes []byte) []byte {
 	list := templatePattern.FindAllStringSubmatch(string(bytes), -1)
 	for _, match := range list {
-		bytes = []byte(strings.Replace(string(bytes), match[0], (*e)[match[1]], -1))
+		str, ok := (*e)[match[1]]
+		if !ok {
+			continue // variable not set
+		}
+		bytes = []byte(strings.Replace(string(bytes), match[0], str, -1))
 	}
 	return bytes
 }
