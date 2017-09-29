@@ -12,6 +12,7 @@ import (
 
 var envVars = make(temgo.EnvVars)
 var inlineFlag = flag.String("i", "", "-i filename")
+var strictFlag = flag.Bool("s", false, "-s")
 
 func init() {
 	for _, e := range os.Environ() {
@@ -49,8 +50,10 @@ func replace(rw *bufio.ReadWriter, file *os.File) {
 		must(rw.Flush())
 	}
 
-	if temgo.ContainsVariable(bytes) {
-		str := envVars.ReplaceVariables(bytes)
+	tg := temgo.New(envVars, *strictFlag)
+	if tg.ContainsVariable(bytes) {
+		str, err := tg.ReplaceVariables(bytes)
+		must(err)
 		if file != nil {
 			truncate(file)
 		}
@@ -63,7 +66,7 @@ func replace(rw *bufio.ReadWriter, file *os.File) {
 // fatal
 func must(err error) {
 	if err != nil {
-		println("Err:", err.Error())
+		println("Error:", err.Error())
 		os.Exit(1)
 	}
 }
