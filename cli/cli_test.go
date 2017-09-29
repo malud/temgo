@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestReplace(t *testing.T) {
@@ -26,8 +28,8 @@ func TestReplace(t *testing.T) {
 		rw := bufio.NewReadWriter(bufio.NewReader(r), bufio.NewWriter(w))
 		replace(rw, nil)
 		out := w.Bytes()
-		if string(out) != testCase.expected {
-			t.Errorf("\nWant: \t%q\nGot: \t%q", string(testCase.expected), string(out))
+		if diff := cmp.Diff(string(out), testCase.expected); diff != "" {
+			t.Errorf("Failed for case: '%v'.\nResult differs:\n%s", string(testCase.in), diff)
 		}
 	}
 }
