@@ -11,8 +11,8 @@ Define variables with the format `{{ VAR_IABLE }}` inside your template files an
 Currently with stdin/stdout and inline support.
  
  ```bash
-# pipe
-TESTVAR=foo cat /opt/templates/file1.ext | tg > /dest/config/file1.ext
+# redirection
+TESTVAR=foo  tg < /opt/templates/file1.ext > /dest/config/file1.ext
 # or inline
 TESTVAR=foo tg -i /dest/config/file1.ext
  ```
