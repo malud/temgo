@@ -16,8 +16,8 @@ var strictFlag = flag.Bool("s", false, "-s")
 
 func init() {
 	for _, e := range os.Environ() {
-		string := strings.Split(e, "=")
-		envVars[string[0]] = string[1]
+		str := strings.Split(e, "=")
+		envVars[str[0]] = str[1]
 	}
 
 	if !flag.Parsed() {
@@ -37,7 +37,6 @@ func main() {
 	} else {
 		rw = bufio.NewReadWriter(bufio.NewReader(os.Stdin), bufio.NewWriter(os.Stdout))
 	}
-
 	replace(rw, file)
 }
 
