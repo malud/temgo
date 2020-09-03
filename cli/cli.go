@@ -5,27 +5,18 @@ import (
 	"flag"
 	"io/ioutil"
 	"os"
-	"strings"
 
 	"github.com/malud/temgo/temgo"
 )
 
-var envVars = make(temgo.EnvVars)
 var inlineFlag = flag.String("i", "", "-i filename")
 var strictFlag = flag.Bool("s", false, "-s")
 
-func init() {
-	for _, e := range os.Environ() {
-		str := strings.Split(e, "=")
-		envVars[str[0]] = str[1]
-	}
-
+func main() {
 	if !flag.Parsed() {
 		flag.Parse()
 	}
-}
 
-func main() {
 	var rw *bufio.ReadWriter
 	var file *os.File
 	if *inlineFlag != "" {
@@ -49,7 +40,7 @@ func replace(rw *bufio.ReadWriter, file *os.File) {
 		must(rw.Flush())
 	}
 
-	tg := temgo.New(envVars, *strictFlag)
+	tg := temgo.New(temgo.NewEnvVars(), *strictFlag)
 	if tg.ContainsVariable(bytes) {
 		str, err := tg.ReplaceVariables(bytes)
 		must(err)

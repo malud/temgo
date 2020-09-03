@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-type EnvVars map[string]string
-
 type Temgo struct {
 	envVars EnvVars
 	pattern *regexp.Regexp

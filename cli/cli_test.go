@@ -11,6 +11,10 @@ import (
 )
 
 func TestReplace(t *testing.T) {
+	const urlEnvExample = "https://example.com/?query=param"
+	os.Setenv("TEMGO_TEST", urlEnvExample)
+	defer os.Unsetenv("TEMGO_TEST")
+
 	wd, _ := os.Getwd()
 	testCases := []struct {
 		in       []byte
@@ -20,6 +24,7 @@ func TestReplace(t *testing.T) {
 		{[]byte("foo {{ NOT_SET }} bar"), "foo {{ NOT_SET }} bar"},
 		{[]byte("foo {{invalid }} bar"), "foo {{invalid }} bar"},
 		{[]byte("foo {{ PWD }}!"), fmt.Sprintf("foo %s!", wd)},
+		{[]byte(`foo "{{ TEMGO_TEST }}"!`), fmt.Sprintf("foo %q!", urlEnvExample)},
 	}
 
 	for _, testCase := range testCases {
